@@ -22,10 +22,13 @@ const getLocalIP = () => {
 
 const LOCAL_IP = getLocalIP();
 
-// Enhanced CORS configuration
+// Enhanced CORS configuration for production hosting
 app.use(cors({
-  origin: ["http://localhost:3200", "http://127.0.0.1:3200", "http://" + LOCAL_IP + ":3200", "*"],
-  methods: ["GET", "POST"],
+  origin: function(origin, callback){
+    // allow requests with no origin (like mobile apps) or any origin
+    return callback(null, true);
+  },
+  methods: ["GET", "POST", "OPTIONS"],
   credentials: true
 }));
 
@@ -252,6 +255,32 @@ io.on("connection", (socket) => {
     }
   });
 
+  // Child sends usage stats
+  socket.on('child_usage_stats', (data) => {
+    const { childId, usageStats, timestamp } = data;
+    console.log(`📊 Usage stats received from child ${childId}:`, {
+      appsCount: usageStats[0]?.apps?.length || 0,
+      timestamp: timestamp
+    });
+
+    // Find parent's socket
+    const childDevice = connectedDevices.get(childId);
+    if (childDevice && childDevice.type === 'child') {
+      // Find parent by searching for parent with this childId
+      for (const [id, device] of connectedDevices.entries()) {
+        if (device.type === 'parent' && device.childId === childId) {
+          io.to(device.socketId).emit('child_usage_stats', {
+            childId: childId,
+            usageStats: usageStats,
+            timestamp: timestamp || new Date().toISOString()
+          });
+          console.log(`📤 Usage stats sent to parent ${id}`);
+          break;
+        }
+      }
+    }
+  });
+
   // Handle disconnection
   socket.on('disconnect', (reason) => {
     console.log("=".repeat(50));
@@ -325,5 +354,5 @@ server.listen(PORT, () => {
   console.log(`   GET /api/connected-devices - List connected devices`);
   console.log(`\n🔌 Socket Events:`);
   console.log(`   Parent: register_parent, lock_child_phone`);
-  console.log(`   Child: register_child, child_status_update, lock_acknowledgment`);
+  console.log(`   Child: register_child, child_status_update, lock_acknowledgment, child_usage_stats`);
 });
