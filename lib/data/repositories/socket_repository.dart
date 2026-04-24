@@ -38,6 +38,11 @@ class SocketRepository implements SocketRepositoryInterface {
   }
 
   @override
+  void sendUsageStats(List<Map<String, dynamic>> usageStats) {
+    _dataSource.sendUsageStats(usageStats);
+  }
+
+  @override
   Stream<bool> get lockStatusStream => _dataSource.lockStatusStream;
 
   @override
@@ -49,4 +54,3 @@ class SocketRepository implements SocketRepositoryInterface {
   @override
   String? get childId => _dataSource.childId;
 }
-

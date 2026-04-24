@@ -3,8 +3,13 @@ class AppConstants {
   static const String defaultChildName = 'Nitin';
   static const int totalStars = 5;
   static const String defaultPin = '1234';
-  //static const String defaultServerUrl = 'http://192.168.1.13:3200';
-  static const String defaultServerUrl = 'http://10.197.83.252:3200';
+  // Use your hosted server URL below once deployed (e.g. 'https://tinywiz-server.onrender.com')
+  // String.fromEnvironment allows passing the URL at build time: --dart-define=SERVER_URL=...
+  static const String defaultServerUrl = String.fromEnvironment(
+    'SERVER_URL',
+    defaultValue: 'https://child-tinywiz.onrender.com',
+  );
+
   static const String defaultChildId = 'child456';
   static const String fontFamily = 'ComicNeue';
 

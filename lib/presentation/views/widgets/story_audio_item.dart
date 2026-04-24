@@ -181,6 +181,23 @@ class StoryAudioItem extends StatelessWidget {
                         Container(width: 30, height: 30),
                     ],
                   ),
+                  if (story.quiz != null && 
+                      audioState.position.inSeconds > 0 && 
+                      !audioState.isPlaying) ...[
+                    SizedBox(height: 12),
+                    Center(
+                      child: ElevatedButton.icon(
+                        onPressed: () => viewModel.startQuiz(),
+                        icon: Icon(Icons.quiz),
+                        label: Text('Take Quiz'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFFF9800),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        ),
+                      ),
+                    ),
+                  ],
                 ] else ...[
                   SizedBox(height: 12),
                   Center(

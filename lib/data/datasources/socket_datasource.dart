@@ -1,5 +1,6 @@
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:async';
+import '../../core/constants/app_constants.dart';
 
 class SocketDataSource {
   IO.Socket? _socket;
@@ -13,14 +14,14 @@ class SocketDataSource {
   Future<bool> connect(String childId, {String? serverUrl}) async {
     try {
       _childId = childId;
-      final String url = serverUrl ?? 'http://192.168.1.13:3200';
+      final String url = serverUrl ?? AppConstants.defaultServerUrl;
       _currentServerUrl = url;
 
       print('🔄 Child connecting to: $url');
       print('🆔 Child ID: $childId');
 
       // SIMPLE APPROACH - Match parent app EXACTLY
-      print('🔧 Creating socket (matching parent app exactly)...');
+      print('🔧 Creating socket...');
       _socket = IO.io(
         url,
         IO.OptionBuilder()
@@ -181,6 +182,17 @@ class SocketDataSource {
         'reason': reason ?? 'Requesting unlock',
         'requestedAt': DateTime.now().toIso8601String(),
       });
+    }
+  }
+
+  void sendUsageStats(List<Map<String, dynamic>> usageStats) {
+    if (_isConnected) {
+      _socket!.emit('child_usage_stats', {
+        'childId': _childId,
+        'usageStats': usageStats,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+      print('📊 Usage stats sent to server: ${usageStats.length} apps');
     }
   }
 

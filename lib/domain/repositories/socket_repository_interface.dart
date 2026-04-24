@@ -5,9 +5,9 @@ abstract class SocketRepositoryInterface {
   void sendLockAcknowledgment(bool locked, String timestamp);
   void sendEmergencyAlert({String? reason});
   void requestUnlock({String? reason});
+  void sendUsageStats(List<Map<String, dynamic>> usageStats);
   Stream<bool> get lockStatusStream;
   Stream<bool> get connectionStatusStream;
   bool get isConnected;
   String? get childId;
 }
-

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../viewmodels/story_time_viewmodel.dart';
 import '../../../core/constants/app_constants.dart';
 import '../widgets/story_audio_item.dart';
+import 'quiz_screen.dart';
 
 class StoryTimeScreen extends StatelessWidget {
   final StoryTimeViewModel viewModel;
@@ -18,11 +19,11 @@ class StoryTimeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF4CAF50),
-        title: Text('Story Time', style: TextStyle(fontFamily: AppConstants.fontFamily)),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: onBack,
+        title: Text(
+          'Story Time',
+          style: TextStyle(fontFamily: AppConstants.fontFamily),
         ),
+        leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: onBack),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -37,6 +38,12 @@ class StoryTimeScreen extends StatelessWidget {
           builder: (context, _) {
             if (viewModel.showWelcome) {
               return _buildWelcomeScreen();
+            } else if (viewModel.showQuiz &&
+                viewModel.currentStory?.quiz != null) {
+              return QuizScreen(
+                viewModel: viewModel,
+                quiz: viewModel.currentStory!.quiz!,
+              );
             } else {
               return _buildStoryLibraryScreen();
             }
@@ -112,10 +119,7 @@ class StoryTimeScreen extends StatelessWidget {
                 final story = viewModel.stories[index];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
-                  child: StoryAudioItem(
-                    story: story,
-                    viewModel: viewModel,
-                  ),
+                  child: StoryAudioItem(story: story, viewModel: viewModel),
                 );
               },
             ),
@@ -125,4 +129,3 @@ class StoryTimeScreen extends StatelessWidget {
     );
   }
 }
-

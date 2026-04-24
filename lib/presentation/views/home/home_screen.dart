@@ -67,7 +67,9 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: viewModel.isConnected ? Colors.green[900] : Colors.red[900],
+                color: viewModel.isConnected
+                    ? Colors.green[900]
+                    : Colors.red[900],
                 fontFamily: AppConstants.fontFamily,
               ),
             ),
@@ -188,7 +190,7 @@ class HomeScreen extends StatelessWidget {
         ),
         _buildActivityButton(
           icon: Icons.star_rounded,
-          label: 'Fun Quiz',
+          label: 'Qn Ans Time',
           color: Color(0xFFFF9800),
           size: 80,
           onTap: () {
@@ -198,7 +200,7 @@ class HomeScreen extends StatelessWidget {
         ),
         _buildActivityButton(
           icon: Icons.music_note_rounded,
-          label: 'Sing Along',
+          label: 'Usage Stats',
           color: Color(0xFFE91E63),
           size: 80,
           onTap: () {

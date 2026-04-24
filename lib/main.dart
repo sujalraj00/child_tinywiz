@@ -1,3 +1,5 @@
+import 'package:child_tinywiz/home_page.dart';
+import 'package:child_tinywiz/usage_stats_screen.dart';
 import 'package:flutter/material.dart';
 import 'core/di/service_locator.dart';
 import 'core/theme/app_theme.dart';
@@ -91,18 +93,23 @@ class MainNavigatorState extends State<MainNavigator> {
             );
             break;
           case 2:
-            screen = ActivityScreen(
-              title: 'Fun Quiz',
-              icon: Icons.star_rounded,
-              color: Color(0xFFFF9800),
-              onBack: () => _homeViewModel.navigateTo(0),
-            );
+            // screen = ActivityScreen(
+            //   title: 'Fun Quiz',
+            //   icon: Icons.star_rounded,
+            //   color: Color(0xFFFF9800),
+            //   onBack: () => _homeViewModel.navigateTo(0),
+            // );
+            screen = HomePage(onBack: () => _homeViewModel.navigateTo(0));
             break;
           case 3:
-            screen = ActivityScreen(
-              title: 'Sing Along',
-              icon: Icons.music_note_rounded,
-              color: Color(0xFFE91E63),
+            // screen = ActivityScreen(
+            //   title: 'Sing Along',
+            //   icon: Icons.music_note_rounded,
+            //   color: Color(0xFFE91E63),
+            //   onBack: () => _homeViewModel.navigateTo(0),
+            // );
+
+            screen = UsageStatsScreen(
               onBack: () => _homeViewModel.navigateTo(0),
             );
             break;
