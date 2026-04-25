@@ -11,12 +11,12 @@ class AppConstants {
   );
 
   static const String defaultChildId = 'child456';
-  static const String fontFamily = 'ComicNeue';
+  static const String fontFamily = 'Cera Pro';
 
   // Colors
-  static const int primaryColorValue = 0xFF4A148C;
-  static const int deepPurpleValue = 0xFF673AB7;
-  static const int greenValue = 0xFF4CAF50;
-  static const int orangeValue = 0xFFFF9800;
-  static const int pinkValue = 0xFFE91E63;
+  static const int primaryColorValue = 0xFF6C63FF; // Modern indigo/purple
+  static const int deepPurpleValue = 0xFF8A2BE2; // Vibrant purple
+  static const int greenValue = 0xFF00E676; // Bright green
+  static const int orangeValue = 0xFFFF9100; // Deep orange
+  static const int pinkValue = 0xFFFF4081; // Pink accent
 }

@@ -44,9 +44,11 @@ class HomeViewModel extends ChangeNotifier {
     );
 
     if (connected) {
+      _isConnected = true;
       // Then set up listeners after connection is established
       _setupSocketListeners();
       _startPeriodicStatusUpdates();
+      notifyListeners();
     } else {
       print('❌ Failed to connect socket, cannot set up listeners');
     }
@@ -176,6 +178,8 @@ class HomeViewModel extends ChangeNotifier {
       _isLocked = false;
       // Notify Android when unlocked
       _notifyAndroidLockStatus(false);
+      // Immediately send status update to server to reflect unlock
+      _sendStatusUpdate();
       notifyListeners();
       return true;
     }

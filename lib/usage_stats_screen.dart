@@ -139,26 +139,44 @@ class _UsageStatsScreenState extends State<UsageStatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF8F9FA),
       appBar: AppBar(
         title: const Text(
-          'App Usage Stats',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'App Usage',
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 24),
         ),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Color(0xFF6C63FF),
         elevation: 0,
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: widget.onBack,
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _checkPermissionAndLoadData,
+          Container(
+            margin: EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              color: Color(0xFF6C63FF).withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.refresh_rounded, color: Color(0xFF6C63FF)),
+              onPressed: _checkPermissionAndLoadData,
+            ),
           ),
         ],
       ),
-      body: _buildBody(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFF8F9FA), Color(0xFFE3F2FD)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: _buildBody(),
+      ),
     );
   }
 
@@ -290,42 +308,44 @@ class _UsageStatsScreenState extends State<UsageStatsScreen> {
         // Summary Card
         Container(
           margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.deepPurple, Colors.purple.shade300],
+              colors: [Color(0xFF6C63FF), Color(0xFF8A2BE2)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.deepPurple.withOpacity(0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+                color: Color(0xFF6C63FF).withOpacity(0.4),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
               ),
             ],
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildSummaryItem(
                 'Total Apps',
                 _usageStats.length.toString(),
-                Icons.apps,
+                Icons.grid_view_rounded,
               ),
+              Container(width: 1, height: 40, color: Colors.white.withOpacity(0.3)),
               _buildSummaryItem(
                 'Total Time',
                 _formatTotalTime(totalUsageTime),
-                Icons.timer,
+                Icons.timer_rounded,
               ),
+              Container(width: 1, height: 40, color: Colors.white.withOpacity(0.3)),
               _buildSummaryItem(
-                'Social Media',
+                'Social',
                 _usageStats
                     .where((app) => app.isSocialMediaApp())
                     .length
                     .toString(),
-                Icons.people,
+                Icons.people_alt_rounded,
               ),
             ],
           ),
@@ -371,66 +391,97 @@ class _UsageStatsScreenState extends State<UsageStatsScreen> {
 
   Widget _buildUsageCard(AppUsageInfo app, double percentage) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
+        border: Border.all(color: Colors.white, width: 2),
       ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16),
-        leading: CircleAvatar(
-          backgroundColor: app.isSocialMediaApp()
-              ? Colors.orange.shade100
-              : Colors.blue.shade100,
-          child: Icon(
-            app.isSocialMediaApp() ? Icons.people : Icons.apps,
-            color: app.isSocialMediaApp()
-                ? Colors.orange.shade700
-                : Colors.blue.shade700,
-          ),
-        ),
-        title: Text(
-          app.appName,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
           children: [
-            const SizedBox(height: 8),
-            Text('Usage time: ${app.formattedTime}'),
-            const SizedBox(height: 8),
-            LinearProgressIndicator(
-              value: percentage / 100,
-              backgroundColor: Colors.grey.shade200,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                app.isSocialMediaApp()
-                    ? Colors.orange.shade600
-                    : Colors.blue.shade600,
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: app.isSocialMediaApp()
+                    ? Color(0xFFFF9100).withOpacity(0.1)
+                    : Color(0xFF00E676).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Icon(
+                app.isSocialMediaApp() ? Icons.people_alt_rounded : Icons.app_shortcut_rounded,
+                color: app.isSocialMediaApp() ? Color(0xFFFF9100) : Color(0xFF00C853),
+                size: 28,
               ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              '${percentage.toStringAsFixed(1)}% of total usage',
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          app.appName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16,
+                            color: Color(0xFF4A148C),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        app.formattedTime,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: app.isSocialMediaApp()
+                              ? Color(0xFFFF9100)
+                              : Color(0xFF00C853),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      value: percentage / 100,
+                      minHeight: 8,
+                      backgroundColor: Colors.grey.shade100,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        app.isSocialMediaApp()
+                            ? Color(0xFFFF9100)
+                            : Color(0xFF00E676),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${percentage.toStringAsFixed(1)}% of total usage',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
-        ),
-        trailing: Text(
-          app.formattedTime,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: app.isSocialMediaApp()
-                ? Colors.orange.shade700
-                : Colors.blue.shade700,
-          ),
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:child_tinywiz/feature_box.dart';
 import 'package:child_tinywiz/gemini_service.dart';
 import 'package:child_tinywiz/pallete.dart';
+import 'package:child_tinywiz/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -273,13 +274,21 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: BounceInDown(child: const Text('Allen')),
+        title: BounceInDown(
+          child: const Text(
+            'Allen Assistant',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: widget.onBack,
         ),
         centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -317,29 +326,35 @@ class _HomePageState extends State<HomePage> {
                 visible: generatedImageUrl == null,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
+                    horizontal: 24,
+                    vertical: 20,
                   ),
                   margin: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                  ).copyWith(top: 30),
+                    horizontal: 30,
+                  ).copyWith(top: 20, bottom: 20),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Pallete.borderColor),
-                    borderRadius: BorderRadius.circular(
-                      20,
-                    ).copyWith(topLeft: Radius.zero),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Text(
-                      generatedContent == null
-                          ? 'Good Morning Nitin, what task can I do for you?'
-                          : generatedContent!,
-                      style: TextStyle(
-                        fontFamily: 'Cera Pro',
-                        color: Pallete.mainFontColor,
-                        fontSize: generatedContent == null ? 25 : 18,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 15,
+                        offset: const Offset(0, 5),
                       ),
+                    ],
+                    border: Border.all(color: Colors.white, width: 2),
+                    borderRadius: BorderRadius.circular(24).copyWith(
+                      topLeft: Radius.zero,
+                    ),
+                  ),
+                  child: Text(
+                    generatedContent == null
+                        ? 'Good Morning ${AppConstants.defaultChildName}, what task can I do for you?'
+                        : generatedContent!,
+                    style: TextStyle(
+                      fontFamily: AppConstants.fontFamily,
+                      color: Pallete.mainFontColor,
+                      fontSize: generatedContent == null ? 22 : 18,
+                      fontWeight: generatedContent == null ? FontWeight.w600 : FontWeight.w500,
                     ),
                   ),
                 ),
@@ -357,15 +372,15 @@ class _HomePageState extends State<HomePage> {
               child: Visibility(
                 visible: generatedContent == null && generatedImageUrl == null,
                 child: Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(top: 10, left: 22),
-                  child: const Text(
+                  margin: const EdgeInsets.only(top: 10, left: 30),
+                  child: Text(
                     'Here are a few features',
                     style: TextStyle(
-                      fontFamily: 'Cera Pro',
-                      color: Pallete.mainFontColor,
-                      fontSize: 20,
+                      fontFamily: AppConstants.fontFamily,
+                      color: Pallete.mainFontColor.withOpacity(0.8),
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -412,48 +427,65 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: ZoomIn(
         delay: Duration(milliseconds: start + 3 * delay),
-        child: FloatingActionButton(
-          backgroundColor: Pallete.firstSuggestionBoxColor,
-          onPressed: () async {
-            print(
-              '🔘 [HomePage] Button pressed. isListening: ${speechToText.isListening}, lastWords: "$lastWords"',
-            );
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Color(AppConstants.primaryColorValue).withOpacity(0.3),
+                blurRadius: 15,
+                offset: Offset(0, 8),
+              ),
+            ],
+          ),
+          child: FloatingActionButton(
+            backgroundColor: Color(AppConstants.primaryColorValue),
+            foregroundColor: Colors.white,
+            elevation: 0,
+            onPressed: () async {
+              print(
+                '🔘 [HomePage] Button pressed. isListening: ${speechToText.isListening}, lastWords: "$lastWords"',
+              );
 
-            if (speechToText.isListening) {
-              // Stop listening manually
-              print('🛑 [HomePage] Stopping listening...');
-              await stopListening();
+              if (speechToText.isListening) {
+                // Stop listening manually
+                print('🛑 [HomePage] Stopping listening...');
+                await stopListening();
 
-              // Wait a bit for final result to come through
-              await Future.delayed(const Duration(milliseconds: 500));
+                // Wait a bit for final result to come through
+                await Future.delayed(const Duration(milliseconds: 500));
 
-              // Process the speech result
-              await _processSpeechResult();
-            } else {
-              // Start listening
-              print('🎤 [HomePage] Starting to listen...');
-
-              // Clear previous results
-              setState(() {
-                lastWords = '';
-                generatedContent = null;
-                generatedImageUrl = null;
-              });
-
-              if (!isInitialized) {
-                await initSpeechToText();
-              }
-
-              if (isInitialized) {
-                await startListening();
+                // Process the speech result
+                await _processSpeechResult();
               } else {
-                _showErrorDialog(
-                  'Please grant microphone permission to use speech recognition.',
-                );
+                // Start listening
+                print('🎤 [HomePage] Starting to listen...');
+
+                // Clear previous results
+                setState(() {
+                  lastWords = '';
+                  generatedContent = null;
+                  generatedImageUrl = null;
+                });
+
+                if (!isInitialized) {
+                  await initSpeechToText();
+                }
+
+                if (isInitialized) {
+                  await startListening();
+                } else {
+                  _showErrorDialog(
+                    'Please grant microphone permission to use speech recognition.',
+                  );
+                }
               }
-            }
-          },
-          child: Icon(speechToText.isListening ? Icons.stop : Icons.mic),
+            },
+            child: Icon(
+              speechToText.isListening ? Icons.stop_rounded : Icons.mic_rounded,
+              size: 28,
+            ),
+          ),
         ),
       ),
     );
